@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class client extends JFrame {
 
@@ -65,7 +66,10 @@ public class client extends JFrame {
 
     private void sendDataToServer() {
         try {
-            Socket socket = new Socket("127.0.0.1", 3000);
+            System.out.println("Enter port number : ");
+        	Scanner sc = new Scanner(System.in);
+        	int port = sc.nextInt();
+            Socket socket = new Socket("127.0.0.1", port);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -80,6 +84,7 @@ public class client extends JFrame {
             receiveFileFromServer(reader);
 
             socket.close();
+            sc.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,6 +98,7 @@ public class client extends JFrame {
                 fileWriter.println(line);
                 result.append(line).append("\n");
             }
+            System.out.println("Data received from server: Check result.txt file");
         }
         JOptionPane.showMessageDialog(this, "Data received from server", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
